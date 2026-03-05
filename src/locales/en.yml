@@ -1,0 +1,21 @@
+extName: Novel Frog
+extDescription: Novel reader and downloader based on Read Frog architecture.
+reader:
+  loading: Loading...
+  next: Next
+  prev: Prev
+  noContent: No content
+  chapter: Chapter
+  page: Page
+  percent: Progress
+popup:
+  options: Options
+  more:
+    title: More
+    translationHub: Translation Hub
+    joinDiscord: Join Discord
+    joinWechat: Join WeChat
+    starGithub: Star on Github
+    rateUs: Rate Us
+    ebook: Third-party E-book Reader
+    tutorial: Tutorial
