@@ -1,7 +1,8 @@
 import React from "react";
 import type { Book } from "@/types/novel";
-import { Search, Loader2, BookOpen, Trash2, Download } from "lucide-react";
+import { Search, Loader2, BookOpen, Trash2, Download, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useReaderNavigation } from "@/hooks/use-reader-navigation";
 
 interface BookCardProps {
   book: Book;
@@ -18,6 +19,13 @@ export const BookCard: React.FC<BookCardProps> = ({
   onDelete, 
   onDownload 
 }) => {
+  const { continueReading } = useReaderNavigation()
+
+  const handleContinueReading = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    continueReading(book.id)
+  }
+
   return (
     <div
       onClick={() => onSelect(book.id)}
@@ -57,6 +65,13 @@ export const BookCard: React.FC<BookCardProps> = ({
       </div>
       
       <div className="absolute top-2 left-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button 
+          onClick={handleContinueReading}
+          className="p-1.5 bg-white/90 text-gray-400 hover:text-green-500 rounded-lg shadow-sm border border-gray-100"
+          title="继续阅读"
+        >
+          <Play size={14} />
+        </button>
         <button 
           onClick={(e) => onDelete(book.id, e)} 
           className="p-1.5 bg-white/90 text-gray-400 hover:text-red-500 rounded-lg shadow-sm border border-gray-100"
