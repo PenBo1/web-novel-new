@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { PageLayout } from "../components/page-layout"
 import { ConfigCard } from "../components/config-card"
 import { SettingItem } from "../components/setting-item"
+import { ShortcutsSettings } from "../components/shortcuts-settings"
 
 export function GeneralPage() {
   const { theme, setTheme } = useTheme()
@@ -81,6 +82,13 @@ export function GeneralPage() {
               <span className="text-xs text-muted-foreground whitespace-nowrap">线程</span>
             </div>
           </SettingItem>
+        </ConfigCard>
+
+        <ConfigCard
+          title="快捷键设置"
+          description="自定义应用快捷键，提高工作效率"
+        >
+          <ShortcutsSettings />
         </ConfigCard>
       </div>
     </PageLayout>

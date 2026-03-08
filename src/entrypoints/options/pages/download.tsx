@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Download, Trash2, Info, Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import type { Book, DownloadRecord } from "@/types/novel"
 import { StorageManager } from "@/lib/core/storage"
 import { IndexedDBManager } from "@/lib/core/idb"
@@ -25,11 +26,10 @@ export function DownloadPage() {
   const loadData = async () => {
     try {
       setIsLoading(true);
-      const dbManager = new IndexedDBManager();
       const [bookshelf, records, stats] = await Promise.all([
         StorageManager.getBookshelf(),
-        dbManager.getDownloadRecords(),
-        dbManager.getDownloadStats(),
+        IndexedDBManager.getDownloadRecords(),
+        IndexedDBManager.getDownloadStats(),
       ]);
 
       setBooks(bookshelf);
@@ -63,8 +63,7 @@ export function DownloadPage() {
       const generator = new EpubGenerator(book, chapters);
       await generator.generateAndDownload();
 
-      const dbManager = new IndexedDBManager();
-      await dbManager.addDownloadRecord({
+      await IndexedDBManager.addDownloadRecord({
         id: crypto.randomUUID(),
         bookId: book.id,
         title: book.title,
@@ -77,8 +76,8 @@ export function DownloadPage() {
         status: "success",
       });
 
-      const records = await dbManager.getDownloadRecords();
-      const stats = await dbManager.getDownloadStats();
+      const records = await IndexedDBManager.getDownloadRecords();
+      const stats = await IndexedDBManager.getDownloadStats();
       setDownloadRecords(records);
       setDownloadStats(stats);
 
@@ -97,10 +96,9 @@ export function DownloadPage() {
     }
 
     try {
-      const dbManager = new IndexedDBManager();
-      await dbManager.deleteDownloadRecord(recordId);
-      const records = await dbManager.getDownloadRecords();
-      const stats = await dbManager.getDownloadStats();
+      await IndexedDBManager.deleteDownloadRecord(recordId);
+      const records = await IndexedDBManager.getDownloadRecords();
+      const stats = await IndexedDBManager.getDownloadStats();
       setDownloadRecords(records);
       setDownloadStats(stats);
 
@@ -117,8 +115,7 @@ export function DownloadPage() {
     }
 
     try {
-      const dbManager = new IndexedDBManager();
-      await dbManager.clearDownloadRecords();
+      await IndexedDBManager.clearDownloadRecords();
       setDownloadRecords([]);
       setDownloadStats({
         totalRecords: 0,
@@ -137,7 +134,6 @@ export function DownloadPage() {
   return (
     <PageLayout
       title="下载中心"
-      description="管理你的电子书存储与下载记录"
     >
       <div className="space-y-6">
         {/* Stats Cards */}
@@ -226,7 +222,8 @@ export function DownloadPage() {
             </div>
 
             {downloadRecords.length > 0 ? (
-              <div className="space-y-2 max-h-[500px] overflow-y-auto">
+              <ScrollArea className="max-h-[500px]">
+                <div className="space-y-2 pr-4">
                 {downloadRecords.slice(0, 50).map((record) => (
                   <div
                     key={record.id}
@@ -267,7 +264,8 @@ export function DownloadPage() {
                     </div>
                   </div>
                 ))}
-              </div>
+                </div>
+              </ScrollArea>
             ) : (
               <div className="py-12 text-center">
                 <Info className="w-6 h-6 text-muted-foreground mx-auto mb-2 opacity-50" />

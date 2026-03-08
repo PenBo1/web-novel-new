@@ -1,13 +1,8 @@
-import { BookshelfPage } from "../pages/bookshelf"
-import { SearchPage } from "../pages/search"
-import { DownloadPage } from "../pages/download"
-import { RulesPage } from "../pages/rules"
-import { GeneralPage } from "../pages/general"
+/**
+ * 路由配置
+ * 用于应用路由映射
+ */
 
-export const ROUTE_CONFIG = [
-    { path: "/", component: BookshelfPage },
-    { path: "/search", component: SearchPage },
-    { path: "/downloads", component: DownloadPage },
-    { path: "/rules", component: RulesPage },
-    { path: "/settings/general", component: GeneralPage },
-] as const
+import { ROUTE_CONFIG } from '../constants'
+
+export { ROUTE_CONFIG }

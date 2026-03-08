@@ -92,10 +92,15 @@ export class IndexedDBManager {
     /** 获取当前用户存储的所有书源规则 */
     static async getRules(): Promise<ScraperRule[]> {
         const rules = await db.rules.toArray();
+        
+        // 如果没有任何规则，初始化默认规则
+        if (rules.length === 0) {
+            const { DEFAULT_RULES } = await import('../scraper/default-rules');
+            await this.saveRules(DEFAULT_RULES);
+            return DEFAULT_RULES;
+        }
+        
         return rules;
-        // if (rules.length > 0) return rules;
-        // 无自定义源时返回内置源
-        // return BUILTIN_RULES; 
     }
 
     /** 批量覆盖保存书源规则 */

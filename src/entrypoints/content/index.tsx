@@ -31,16 +31,35 @@ export default defineContentScript({
   },
 });
 
+/**
+ * 阅读器应用主组件
+ */
 function ReaderApp() {
   const [settings] = useAtom(settingsAtom);
-  const [activeBookId] = useAtom(activeBookIdAtom);
+  const [activeBookId, setActiveBookId] = useAtom(activeBookIdAtom);
   const [chapterIndex, setChapterIndex] = useAtom(currentChapterIndexAtom);
   const [scroll, setScroll] = useAtom(scrollPositionAtom);
   const [chapters, setChapters] = React.useState<any[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
   const [isVisible, setIsVisible] = React.useState(true);
 
-  // Keyboard Shortcuts
+  // 监听从书架打开阅读器的事件
+  React.useEffect(() => {
+    const handleShowReader = (event: Event) => {
+      const customEvent = event as CustomEvent
+      const { bookId, chapterIndex: newChapterIndex = 0, scrollPosition = 0 } = customEvent.detail
+
+      setActiveBookId(bookId)
+      setChapterIndex(newChapterIndex)
+      setScroll(scrollPosition)
+      setIsVisible(true)
+    }
+
+    window.addEventListener('show-reader', handleShowReader)
+    return () => window.removeEventListener('show-reader', handleShowReader)
+  }, [setActiveBookId, setChapterIndex, setScroll])
+
+  // 键盘快捷键
   React.useEffect(() => {
     if (!isVisible || !activeBookId) return;
 
@@ -57,13 +76,13 @@ function ReaderApp() {
     };
   }, [isVisible, activeBookId, chapters.length, setScroll, setChapterIndex]);
 
-  // Load chapters when book changes
+  // 当书籍改变时加载章节
   React.useEffect(() => {
     if (!activeBookId) return;
     db.chapters.where('bookId').equals(activeBookId).sortBy('order').then(setChapters);
   }, [activeBookId]);
 
-  // Fetch content if missing
+  // 如果内容缺失则获取
   React.useEffect(() => {
     const chapter = chapters[chapterIndex];
     if (!chapter || chapter.content || isFetching) return;
