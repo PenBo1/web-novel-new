@@ -1,5 +1,5 @@
-import antfu from "@antfu/eslint-config";
-import pluginQuery from "@tanstack/eslint-plugin-query";
+import antfu from "@antfu/eslint-config"
+import pluginQuery from "@tanstack/eslint-plugin-query"
 
 export default antfu(
   {
@@ -11,7 +11,7 @@ export default antfu(
       html: true,
       markdown: "prettier",
     },
-    ignores: ["demo/**"],
+    ignores: [".wxt/**", "demo/**", "**/*.md"],
     rules: {
       "unused-imports/no-unused-imports": "error",
       "no-inner-declarations": "error",
@@ -39,7 +39,7 @@ export default antfu(
   ],
   [
     {
-      ignores: ["**/*.md/**", ".agents/**/*"],
+      ignores: ["**/*.md", "**/*.md/**", ".agents/**/*", ".wxt/**"],
     },
   ],
 ).append({
@@ -54,4 +54,4 @@ export default antfu(
     "test/no-identical-title": "error",
     "test/prefer-hooks-on-top": "error",
   },
-});
+})

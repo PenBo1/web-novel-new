@@ -5,11 +5,11 @@ module.exports = {
       fromPrefix: "--tw-",
       toPrefix: "--rf-tw-",
     },
-    autoprefixer: {},
+    "autoprefixer": {},
     "postcss-rem-to-responsive-pixel": {
       rootValue: 16,
       propList: ["*"],
       transformUnit: "px",
     },
   },
-};
+}
